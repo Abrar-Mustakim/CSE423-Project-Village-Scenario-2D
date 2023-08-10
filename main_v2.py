@@ -79,7 +79,7 @@ def draw_circle(x_center, y_center, radius, color):
 rain_animation = False
 rain_timer = 0
 rain_duration = 100  # 5 seconds at 20 FPS
-raindrops = [(random.uniform(-1.0, 1.0), random.uniform(0.0, 1.0)) for _ in range(500)]
+raindrops = [(random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0)) for _ in range(1000)]
 
 
 def draw_raindrop(x, y):
@@ -161,7 +161,10 @@ def draw_cloud(x, y):
 
 
 def draw_cloud(x, y):
-    glColor3f(1, 1, 1)  # White clouds (color will be overridden during rain)
+    if rain_animation:
+        glColor3f(0.5, 0.5, 0.5)  # Dark grey clouds during rain
+    else:
+        glColor3f(1, 1, 1)  # White clouds (color will be overridden during rain)
     draw_circle(x, y, 0.1, (1, 1, 1))
     draw_circle(x + 0.1, y, 0.15, (1, 1, 1))
     draw_circle(x + 0.2, y, 0.1, (1, 1, 1))
@@ -255,7 +258,8 @@ def draw_bird(x, y):
 bird_positions = [
     (0.7, 0.6), (0.8, 0.65), (0.75, 0.7), 
     (0.9, 0.6), (0.85, 0.7), (0.95, 0.65),
-    (1.0, 0.6), (1.05, 0.7)
+    (1.0, 0.6), (1.05, 0.7),
+    (0.8, 0.5), (1.03, 0.6)
 ] 
 # Global variable to control bird animation
 bird_animation = False
@@ -292,12 +296,20 @@ def showScreen():
     draw_house(-0.6, -0.2, 0.5, 0.5)
 
     # Draw trees
+    draw_tree(-0.9, -0.1)
     draw_tree(-0.8, -0.2)
-    draw_tree(-0.5, -0.2)
+
+    if bird_animation:
+        global bird_positions
+        bird_positions = [(x - 0.005, y) for x, y in bird_positions]  # Move birds to the left
+        for x, y in bird_positions:
+            draw_bird(x, y)
+    
+    global rain_timer, rain_animation
 
     # Rain Scene
     if rain_animation:
-        glColor3f(0.3, 0.3, 0.3)  # Dark grey clouds during rain
+        glColor3f(0.5, 0.5, 0.5)  # Grey clouds during rain
         draw_cloud(0.4, 0.6)
         draw_cloud(-0.4, 0.5)
         draw_cloud(-0.6, 0.7)
@@ -311,7 +323,7 @@ def showScreen():
         if rain_timer > rain_duration:
             rain_animation = False
             rain_timer = 0
-            raindrops = [(random.uniform(-1.0, 1.0), random.uniform(0.0, 1.0)) for _ in range(500)]
+            raindrops = [(random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0)) for _ in range(1000)]
 
 
     # Day Scene
