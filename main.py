@@ -2,7 +2,6 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from math import cos, sin
-import math
 import random
 
 
@@ -76,95 +75,45 @@ def draw_circle(x_center, y_center, radius, color):
     glEnd()
 
 
+
 rain_animation = False
 rain_timer = 0
-rain_duration = 100  # 5 seconds at 20 FPS
-raindrops = [(random.uniform(-1.0, 1.0), random.uniform(0.0, 1.0)) for _ in range(500)]
+rain_duration = 100  # Equivalent to 5 seconds if you're running at 20 FPS
+raindrops = [(random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0)) for _ in range(500)]
 
 
 def draw_raindrop(x, y):
-    glColor3f(0.5, 0.5, 1.0)
+    glColor3f(0.5, 0.5, 1.0)  # Light blue color for raindrops
     glBegin(GL_LINES)
     glVertex2f(x, y)
     glVertex2f(x, y + 0.05)
     glEnd()
 
+
 # Function to draw sky (gradient background)
 is_day = True
-'''
 def draw_sky():
-    
     glBegin(GL_QUADS)
-
-    if rain_animation:
-        glColor3f(0.1, 0.1, 0.3)  # Darker blue sky color during rain
-    else:
-        glColor3f(0.4, 0.7, 1.0)  # Regular sky color
-   
     if is_day:
         glColor3f(0.4, 0.7, 1.0)  # Day sky color (top)
         glVertex2f(-1, 1)
         glVertex2f(1, 1)
         glColor3f(0.7, 0.9, 1.0)  # Day sky color (bottom)
-
     else:
         glColor3f(0.03, 0.03, 0.2)  # Darker night sky color (top)
         glVertex2f(-1, 1)
         glVertex2f(1, 1)
         glColor3f(0.1, 0.1, 0.3)  # Darker night sky color (bottom)
-
-    
-
-    
     glVertex2f(1, -0.5)
     glVertex2f(-1, -0.5)
     glEnd()
-'''
-
-
-def draw_sky():
-    glBegin(GL_QUADS)
-    if is_day and not rain_animation:  # Day without rain
-        glColor3f(0.4, 0.7, 1.0)  # Day sky color (top)
-        glVertex2f(-1, 1)
-        glVertex2f(1, 1)
-        glColor3f(0.7, 0.9, 1.0)  # Day sky color (bottom)
-    elif not is_day and not rain_animation:  # Night without rain
-        glColor3f(0.03, 0.03, 0.2)  # Darker night sky color (top)
-        glVertex2f(-1, 1)
-        glVertex2f(1, 1)
-        glColor3f(0.1, 0.1, 0.3)  # Darker night sky color (bottom)
-    elif rain_animation:  # Rain (either day or night)
-        glColor3f(0.2, 0.2, 0.5)  # Rainy sky color (top)
-        glVertex2f(-1, 1)
-        glVertex2f(1, 1)
-        glColor3f(0.3, 0.3, 0.7)  # Rainy sky color (bottom)
-    glVertex2f(1, -0.5)
-    glVertex2f(-1, -0.5)
-    glEnd()
-'''
-def draw_cloud(x, y):
-    glBegin(GL_POLYGON)
-    if rain_animation:
-        glColor3f(0.3, 0.3, 0.3)  # Dark grey clouds during rain
-    else:
-        glColor3f(1, 1, 1)  # White clouds otherwise
-    for i in range(10):
-        theta = 2 * math.pi * i / 10
-        x_pos = 0.1 * math.cos(theta)
-        y_pos = 0.05 * math.sin(theta)
-        glVertex2f(x + x_pos, y + y_pos)
-    glEnd()
-'''
-
-
-
 
 def draw_cloud(x, y):
-    glColor3f(1, 1, 1)  # White clouds (color will be overridden during rain)
-    draw_circle(x, y, 0.1, (1, 1, 1))
-    draw_circle(x + 0.1, y, 0.15, (1, 1, 1))
-    draw_circle(x + 0.2, y, 0.1, (1, 1, 1))
+    # Drawing three circles together to make a simple cloud shape
+    glColor3f(1, 1, 1)  # White color for clouds
+    draw_circle(x, y, 0.08, (1, 1, 1))
+    draw_circle(x+0.05, y, 0.08, (1, 1, 1))
+    draw_circle(x+0.025, y+0.04, 0.08, (1, 1, 1))
 
 def draw_star(x, y):
     # Drawing a simple star using a point
@@ -281,51 +230,58 @@ def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glLoadIdentity()
-   
-    global is_day, rain_animation, rain_timer
 
-     # Draw sky and ground
+    
+
+    # Draw sky and ground
     draw_sky()
     draw_ground()
 
     # Draw houses
-    draw_house(-0.6, -0.2, 0.5, 0.5)
+    draw_house(-0.6, -0.2, 0.3, 0.3)
+  
 
     # Draw trees
-    draw_tree(-0.8, -0.2)
-    draw_tree(-0.5, -0.2)
+    draw_tree(-0.8, -0.2)  # First tree
+    draw_tree(-0.6, -0.1)  # Second tree
 
-    # Rain Scene
+    if bird_animation:
+        global bird_positions
+        bird_positions = [(x - 0.005, y) for x, y in bird_positions]  # Move birds to the left
+        for x, y in bird_positions:
+            draw_bird(x, y)
+    
+    global rain_timer, rain_animation
+
     if rain_animation:
-        glColor3f(0.3, 0.3, 0.3)  # Dark grey clouds during rain
-        draw_cloud(0.4, 0.6)
-        draw_cloud(-0.4, 0.5)
-        draw_cloud(-0.6, 0.7)
-        
-        # Raindrop animation
-        global raindrops
-        raindrops = [(x, y - 0.02) for x, y in raindrops]  # Move raindrops downward
-        for x, y in raindrops:
-            draw_raindrop(x, y)
+        glColor3f(0.4, 0.4, 0.5)  # Darken sky color during rain
         rain_timer += 1
         if rain_timer > rain_duration:
             rain_animation = False
             rain_timer = 0
-            raindrops = [(random.uniform(-1.0, 1.0), random.uniform(0.0, 1.0)) for _ in range(500)]
+    else:
+        glColor3f(0.529, 0.808, 0.922)  # Regular sky color
+
+    if rain_animation:
+        for x, y in raindrops:
+            draw_raindrop(x, y)
 
 
-    # Day Scene
-    elif is_day:
-        draw_circle(0.7, 0.7, 0.08, (1.0, 0.843, 0.0))  # Sun
+    if is_day:
+        draw_circle(0.7, 0.7, 0.08, (1.0, 0.843, 0.0)) # Sun coordinates, size, and color
+
         draw_cloud(0.4, 0.6)
         draw_cloud(-0.4, 0.5)
         draw_cloud(-0.6, 0.7)
 
-    # Night Scene
+        
     else:
-        draw_circle(0.7, 0.7, 0.08, (1, 1, 1))  # Moon
+        draw_circle(0.7, 0.7, 0.08, (1, 1, 1))
+        
         for x, y in star_positions:
             draw_star(x, y)
+            
+
     glutSwapBuffers()
 
 def keyboard(key, x, y):
