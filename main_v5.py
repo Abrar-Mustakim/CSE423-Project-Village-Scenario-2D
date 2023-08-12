@@ -302,19 +302,8 @@ def draw_house(situation):
     glVertex2d(265, 240)
     glVertex2d(265, 200)
     glEnd()
-    
-    
 
-    #Chimney
-    # glColor3f(0.0, 0.5, 0.5)  # Black color for windows
-    # glBegin(GL_QUADS)
-    # glVertex2d(235, 200)
-    # glVertex2d(235, 240)
-    # glVertex2d(265, 240)
-    # glVertex2d(265, 200)
-    # glEnd()
-
-
+    #Door Nob
     glColor3f(1.0, 1.0, 0.5)  # Black color for windows
     glPointSize(5)
     glBegin(GL_POINTS)
@@ -456,11 +445,7 @@ def showScreen():
     draw_tree(-0.8, -0.2)
     draw_river()
     draw_boat(boat_position)
-    if bird_animation:
-        global bird_positions
-        bird_positions = [(x - 0.5, y) for x, y in bird_positions]  # Move birds to the left
-        for x, y in bird_positions:
-            draw_bird(x, y)
+    
         
         
   
@@ -499,6 +484,13 @@ def showScreen():
         for x, y in star_positions:
             draw_star(x, y)
         draw_house("night")
+
+
+    if bird_animation:
+        global bird_positions
+        bird_positions = [(x - 0.5, y) for x, y in bird_positions]  # Move birds to the left
+        for x, y in bird_positions:
+            draw_bird(x, y)
     glutSwapBuffers()
 
 def keyboard(key, x, y):
