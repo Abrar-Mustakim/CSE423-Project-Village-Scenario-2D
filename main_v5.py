@@ -196,7 +196,7 @@ def draw_ground():
 # Function to draw a simple house
 def draw_house(situation):
     # Draw main body of the house
-    glColor4f(1.0, 1.0, 0.0, 0.0)# Brown color for the house
+    glColor4f(1.0, 0.5, 0.0, 0.0)# Brown color for the house
     glBegin(GL_POLYGON)
     glVertex2d(200, 200)
     glVertex2d(300, 200)
@@ -264,20 +264,62 @@ def draw_house(situation):
         glColor3f(1.0, 1.0, 1.0) 
     glBegin(GL_QUADS)
     glVertex2d(310, 220)
-    glVertex2d(330, 220)
-    glVertex2d(330, 240)
+    glVertex2d(340, 220)
+    glVertex2d(340, 240)
     glVertex2d(310, 240)
     glEnd()
+
+
+    if situation == "day":
+        glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+    else:
+        glColor3f(1.0, 1.0, 1.0) 
+    glBegin(GL_QUADS)
+    glVertex2d(210, 220)
+    glVertex2d(230, 220)
+    glVertex2d(230, 240)
+    glVertex2d(210, 240)
+    glEnd()
+
+
+    if situation == "day":
+        glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+    else:
+        glColor3f(1.0, 1.0, 1.0) 
+    glBegin(GL_QUADS)
+    glVertex2d(275, 220)
+    glVertex2d(295, 220)
+    glVertex2d(295, 240)
+    glVertex2d(275, 240)
+    glEnd()
+   
     # Door
 
-    # glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+    glColor3f(0.0, 0.5, 0.5)  # Black color for windows
+    glBegin(GL_QUADS)
+    glVertex2d(235, 200)
+    glVertex2d(235, 240)
+    glVertex2d(265, 240)
+    glVertex2d(265, 200)
+    glEnd()
+    
+    
+
+    #Chimney
+    # glColor3f(0.0, 0.5, 0.5)  # Black color for windows
     # glBegin(GL_QUADS)
-    # glVertex2d(310, 220)
-    # glVertex2d(330, 220)
-    # glVertex2d(330, 240)
-    # glVertex2d(310, 240)
+    # glVertex2d(235, 200)
+    # glVertex2d(235, 240)
+    # glVertex2d(265, 240)
+    # glVertex2d(265, 200)
     # glEnd()
- 
+
+
+    glColor3f(1.0, 1.0, 0.5)  # Black color for windows
+    glPointSize(5)
+    glBegin(GL_POINTS)
+    glVertex2f(260, 220)
+    glEnd()
     
 
 # Function to draw a simple tree
