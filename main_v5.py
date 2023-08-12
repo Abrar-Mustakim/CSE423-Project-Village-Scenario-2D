@@ -8,9 +8,11 @@ import random
 
 
 #Midpoint Line Drawing Algorithms
-def midpointcircle(x, y, r):
-    glPointSize(2) #pixel size. by default 1 thake
-    glBegin(GL_POINTS)
+def midpointcircle(x, y, r, color):
+    glColor3f(*color) # Set the color
+    glBegin(GL_POINT)
+    glPointSize(1) #pixel size. by default 1 thake
+    
     #N, S, E, W from center
     d = 1.25-r
     x1 = x 
@@ -192,38 +194,91 @@ def draw_ground():
     glEnd()
 
 # Function to draw a simple house
-def draw_house(x, y, width, height):
+def draw_house(situation):
     # Draw main body of the house
-    glColor3f(0.7, 0.4, 0.0)  # Brown color for the house
-    glBegin(GL_QUADS)
-    glVertex2f(x, y)
-    glVertex2f(x + width, y)
-    glVertex2f(x + width, y - height)
-    glVertex2f(x, y - height)
+    glColor4f(1.0, 1.0, 0.0, 0.0)# Brown color for the house
+    glBegin(GL_POLYGON)
+    glVertex2d(200, 200)
+    glVertex2d(300, 200)
+    glVertex2d(300, 250)
+    glVertex2d(250, 300)
+    glVertex2d(200, 250)
+    glVertex2d(200, 200)
+
+
+    glVertex2d(300, 200)
+    glVertex2d(350, 200)
+    glVertex2d(350, 250)
+    glVertex2d(300, 250)
+
     glEnd()
 
     # Draw roof
     glColor3f(0.5, 0.0, 0.0)  # Dark red color for the roof
-    glBegin(GL_TRIANGLES)
-    glVertex2f(x, y)
-    glVertex2f(x + width, y)
-    glVertex2f(x + width / 2, y + height / 2)
+    glBegin(GL_POLYGON)
+    glVertex2d(200, 250)
+    glVertex2d(180, 270)
+    glVertex2d(250, 340)
+    glVertex2d(250, 300)
+    glVertex2d(200, 250)
+
+    #glVertex2d(310, 270)
+    #glVertex2d(300, 250)
+    #glVertex2d(250, 300)
+    #glVertex2d(200, 250)
     glEnd()
 
-    # Draw windows
-    glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+
+    
+    
+    glColor3f(0.5, 0.0, 0.0)  # Black color for windows
     glBegin(GL_QUADS)
-    # Window 1
-    glVertex2f(x + 0.05, y - 0.05)
-    glVertex2f(x + 0.15, y - 0.05)
-    glVertex2f(x + 0.15, y - 0.15)
-    glVertex2f(x + 0.05, y - 0.15)
-    # Window 2
-    glVertex2f(x + width - 0.15, y - 0.05)
-    glVertex2f(x + width - 0.05, y - 0.05)
-    glVertex2f(x + width - 0.05, y - 0.15)
-    glVertex2f(x + width - 0.15, y - 0.15)
+    glVertex2d(300, 250)
+    glVertex2d(310, 270)
+    glVertex2d(250, 340)
+    glVertex2d(250, 300)
+    glVertex2d(300, 250)
+
     glEnd()
+
+    
+    glColor3f(0.5, 0.0, 0.0)  # Black color for windows
+   
+    glBegin(GL_POLYGON)
+    glVertex2d(310, 270)
+    glVertex2d(350, 270)
+    glVertex2d(370, 250)
+    glVertex2d(300, 250)
+    glVertex2d(310, 270)
+
+    glEnd()
+
+
+    # Draw windows
+    
+
+    # Window 1
+    if situation == "day":
+        glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+    else:
+        glColor3f(1.0, 1.0, 1.0) 
+    glBegin(GL_QUADS)
+    glVertex2d(310, 220)
+    glVertex2d(330, 220)
+    glVertex2d(330, 240)
+    glVertex2d(310, 240)
+    glEnd()
+    # Door
+
+    # glColor3f(0.0, 0.0, 0.0)  # Black color for windows
+    # glBegin(GL_QUADS)
+    # glVertex2d(310, 220)
+    # glVertex2d(330, 220)
+    # glVertex2d(330, 240)
+    # glVertex2d(310, 240)
+    # glEnd()
+ 
+    
 
 # Function to draw a simple tree
 def draw_tree(x, y):
@@ -352,7 +407,7 @@ def showScreen():
     draw_ground()
 
     # Draw houses
-    draw_house(-0.6, -0.2, 0.5, 0.5)
+    draw_house("day")
     global bird_animation
     # Draw trees
     draw_tree(-0.9, -0.1)
@@ -375,7 +430,7 @@ def showScreen():
         draw_cloud(500, 450)
         draw_cloud(300, 420)
         draw_cloud(200, 500)
-        
+        draw_house("night")
         # Raindrop animation
         global raindrops
         raindrops = [(x, y - 2) for x, y in raindrops]  # Move raindrops downward
@@ -391,15 +446,17 @@ def showScreen():
     # Day Scene
     elif is_day:
         draw_circle(700, 500, 40, (1.0, 0.843, 0.0))  # Sun
+        #midpointcircle(700, 500, 40, (1.0, 0.843, 0.0))
         draw_cloud(500, 450)
         draw_cloud(300, 420)
         draw_cloud(200, 500)
-
+        draw_house("day")
     # Night Scene
     else:
         draw_circle(700, 500, 40, (1, 1, 1))  # Moon
         for x, y in star_positions:
             draw_star(x, y)
+        draw_house("night")
     glutSwapBuffers()
 
 def keyboard(key, x, y):
