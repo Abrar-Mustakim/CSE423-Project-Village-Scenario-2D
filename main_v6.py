@@ -300,7 +300,7 @@ def draw_star(x, y):
     glBegin(GL_POINTS)
     glVertex2f(x, y)
     glEnd()
-star_positions = [(random.uniform(0, 600), random.uniform(800, 300)) for _ in range(50)]
+star_positions = [(random.uniform(0, 800), random.uniform(800, 400)) for _ in range(50)]
 
 
 # Function to draw ground (flat surface)
