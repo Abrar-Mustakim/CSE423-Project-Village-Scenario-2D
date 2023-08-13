@@ -8,11 +8,11 @@ import random
 
 
 #Midpoint Line Drawing Algorithms
+'''
 def midpointcircle(x, y, r, color):
     glColor3f(*color) # Set the color
     glBegin(GL_POINT)
     glPointSize(1) #pixel size. by default 1 thake
-    
     #N, S, E, W from center
     d = 1.25-r
     x1 = x 
@@ -65,7 +65,40 @@ def midpointcircle(x, y, r, color):
             glVertex2f(-y, x)
             glVertex2f(-x, y)
     glEnd()
-            
+'''
+
+
+def midpointcircle(x, y, r, color):
+    glColor3f(*color)
+    glPointSize(2)  # pixel size
+    glBegin(GL_POINTS)
+
+    d = 1.25 - r
+    x1 = x
+    y1 = y
+    x = 0
+    y = r
+
+    while x <= y:
+        if d < 0:
+            d = d + 2 * x + 3
+            x += 1
+        else:
+            d = d + 2 * x - 2 * y + 5
+            x += 1
+            y -= 1
+
+        # Draw horizontal lines (or points) between boundary points for all octants
+        for fill_x in range(-x + x1, x + x1 + 1):
+            glVertex2f(fill_x, y + y1)
+            glVertex2f(fill_x, -y + y1)
+        for fill_x in range(-y + x1, y + x1 + 1):
+            glVertex2f(fill_x, x + y1)
+            glVertex2f(fill_x, -x + y1)
+
+    glEnd()
+
+
 def draw_circle(x_center, y_center, radius, color):
     glColor3f(*color) # Set the color
     glBegin(GL_POLYGON)
@@ -93,37 +126,6 @@ def draw_raindrop(x, y):
 
 # Function to draw sky (gradient background)
 is_day = True
-'''
-def draw_sky():
-    
-    glBegin(GL_QUADS)
-
-    if rain_animation:
-        glColor3f(0.1, 0.1, 0.3)  # Darker blue sky color during rain
-    else:
-        glColor3f(0.4, 0.7, 1.0)  # Regular sky color
-   
-    if is_day:
-        glColor3f(0.4, 0.7, 1.0)  # Day sky color (top)
-        glVertex2f(-1, 1)
-        glVertex2f(1, 1)
-        glColor3f(0.7, 0.9, 1.0)  # Day sky color (bottom)
-
-    else:
-        glColor3f(0.03, 0.03, 0.2)  # Darker night sky color (top)
-        glVertex2f(-1, 1)
-        glVertex2f(1, 1)
-        glColor3f(0.1, 0.1, 0.3)  # Darker night sky color (bottom)
-
-    
-
-    
-    glVertex2f(1, -0.5)
-    glVertex2f(-1, -0.5)
-    glEnd()
-'''
-
-
 def draw_sky():
     glBegin(GL_QUADS)
     if is_day and not rain_animation:  # Day without rain
@@ -145,20 +147,6 @@ def draw_sky():
     glVertex2f(0, 300)
     
     glEnd()
-'''
-def draw_cloud(x, y):
-    glBegin(GL_POLYGON)
-    if rain_animation:
-        glColor3f(0.3, 0.3, 0.3)  # Dark grey clouds during rain
-    else:
-        glColor3f(1, 1, 1)  # White clouds otherwise
-    for i in range(10):
-        theta = 2 * math.pi * i / 10
-        x_pos = 0.1 * math.cos(theta)
-        y_pos = 0.05 * math.sin(theta)
-        glVertex2f(x + x_pos, y + y_pos)
-    glEnd()
-'''
 
 
 
@@ -168,6 +156,11 @@ def draw_cloud(x, y):
         glColor3f(0.5, 0.5, 0.5)  # Dark grey clouds during rain
     else:
         glColor3f(1, 1, 1)  # White clouds (color will be overridden during rain)
+    
+    # midpointcircle(x, y, 50, (1, 1, 1))
+    # midpointcircle(x + 50, y, 40, (1, 1, 1))
+    # midpointcircle(x - 50, y, 40, (1, 1, 1))
+    
     draw_circle(x, y, 50, (1, 1, 1))
     draw_circle(x + 50, y, 40, (1, 1, 1))
     draw_circle(x - 50, y, 40, (1, 1, 1))
@@ -357,16 +350,7 @@ def animate_birds():
     # Move the birds to the left
     bird_positions = [(x - 0.01, y) for x, y in bird_positions]
 
-'''
-# Function to draw the sun using the midpoint circle drawing algorithm
-def iterate():
-    glViewport(0, 0, 500, 500)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    glOrtho(0.0, 500, 0.0, 500, 0.0, 1.0)
-    glMatrixMode (GL_MODELVIEW)
-    glLoadIdentity()
-'''
+
 def draw_river():
     glBegin(GL_QUADS)
     glColor3f(0.0, 0.5, 1.0)  # Blue color for water
@@ -472,15 +456,16 @@ def showScreen():
 
     # Day Scene
     elif is_day:
-        draw_circle(700, 500, 40, (1.0, 0.843, 0.0))  # Sun
-        #midpointcircle(700, 500, 40, (1.0, 0.843, 0.0))
+        #draw_circle(700, 500, 40, (1.0, 0.843, 0.0))  # Sun
+        midpointcircle(700, 500, 40, (1.0, 0.843, 0.0))
         draw_cloud(500, 450)
         draw_cloud(300, 420)
         draw_cloud(200, 500)
         draw_house("day")
     # Night Scene
     else:
-        draw_circle(700, 500, 40, (1, 1, 1))  # Moon
+        #draw_circle(700, 500, 40, (1, 1, 1))  # Moon
+        midpointcircle(700, 500, 40, (1, 1, 1))
         for x, y in star_positions:
             draw_star(x, y)
         draw_house("night")
@@ -491,21 +476,21 @@ def showScreen():
         bird_positions = [(x - 0.5, y) for x, y in bird_positions]  # Move birds to the left
         for x, y in bird_positions:
             draw_bird(x, y)
+
+    draw_boat(boat_position)
+
     glutSwapBuffers()
 
 def keyboard(key, x, y):
     global is_day, bird_animation
     global is_day, rain_animation, rain_timer, boat_position
-
     if key == b'd':
         is_day = not is_day
     if key == b'b':
         bird_animation = not bird_animation
-        
     if key == b'r' and not rain_animation:
         rain_animation = True
         rain_timer = 0
-
     if key == b'm':
         boat_position += 5
     if key == b'n':
@@ -513,8 +498,6 @@ def keyboard(key, x, y):
             boat_position -=0
         else:
             boat_position -= 5
-        
-
     glutPostRedisplay()
 
 glutInit()
