@@ -115,8 +115,8 @@ def midPointAlgo(x1, y1, x2, y2):
 
     while x <= x2:
         tx, ty = convertFromZoneZeroToZoneSmth(x, y, zone)
-        drawPoint(tx, ty)  # Assuming that you have a drawPoint function for drawing the point
-        # print("Drawn", (tx, ty))  # You can use this line for debugging if needed
+        drawPoint(tx, ty)  # Assuming that we have a drawPoint function for drawing the point
+        # print("Drawn", (tx, ty))  # we can use this line for debugging if needed
         x += 1
         if d > 0:
             d += incNE
@@ -163,7 +163,7 @@ def convertFromZoneZeroToZoneSmth(x, y, zone):
 
 
 
-
+#Midpoint Circle Drawing Algorithm
 def midpointcircle(x, y, r, color):
     glColor3f(*color)
     glPointSize(2)  # pixel size
@@ -240,7 +240,7 @@ def tree_leaf(x,y):
 
 rain_animation = False
 rain_timer = 0
-rain_duration = 300  # 5 seconds at 20 FPS
+rain_duration = 120  # 5 seconds at 20 FPS
 raindrops = [(random.uniform(0, 800), random.uniform(0, 800)) for _ in range(2000)]
 
 
@@ -309,7 +309,7 @@ def draw_ground():
     glBegin(GL_QUADS)
     glVertex2f(0, 300)
     glVertex2f(800, 300)
-    glVertex2f(800, 0)
+    glVertex2f(700, 0)
     glVertex2f(0, 0)
     glEnd()
 
@@ -341,11 +341,6 @@ def draw_house(situation):
     glVertex2d(250, 340)
     glVertex2d(250, 300)
     glVertex2d(200, 250)
-
-    #glVertex2d(310, 270)
-    #glVertex2d(300, 250)
-    #glVertex2d(250, 300)
-    #glVertex2d(200, 250)
     glEnd()
 
 
@@ -375,8 +370,6 @@ def draw_house(situation):
 
 
     # Draw windows
-    
-
     # Window 1
     if situation == "day":
         glColor3f(0.0, 0.0, 0.0)  # Black color for windows
@@ -400,8 +393,6 @@ def draw_house(situation):
     glVertex2d(230, 240)
     glVertex2d(210, 240)
     glEnd()
-
-
     if situation == "day":
         glColor3f(0.0, 0.0, 0.0)  # Black color for windows
     else:
@@ -414,7 +405,6 @@ def draw_house(situation):
     glEnd()
    
     # Door
-
     glColor3f(0.0, 0.5, 0.5)  # Black color for windows
     glBegin(GL_QUADS)
     glVertex2d(235, 200)
@@ -475,7 +465,7 @@ bird_animation = False
 def animate_birds():
     global bird_positions
     # Move the birds to the left
-    bird_positions = [(x - 0.01, y) for x, y in bird_positions]
+    bird_positions = [(x - 2, y) for x, y in bird_positions]
 
 
 def draw_river():
@@ -709,12 +699,12 @@ def keyboard(key, x, y):
         rain_animation = True
         rain_timer = 0
     if key == b'm':
-        boat_position += 4
+        boat_position += 5
     if key == b'n':
         if boat_position < 500:
             boat_position -=0
         else:
-            boat_position -= 4
+            boat_position -= 5
     glutPostRedisplay()
 
 glutInit()
