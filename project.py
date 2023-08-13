@@ -672,4 +672,3 @@ glutDisplayFunc(showScreen)
 glutIdleFunc(showScreen) # Keep drawing the scene
 glutKeyboardFunc(keyboard)
 glutMainLoop()
-
