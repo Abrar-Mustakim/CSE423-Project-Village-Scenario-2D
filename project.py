@@ -2,7 +2,6 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from math import cos, sin
-import math
 import random
 
 
@@ -66,8 +65,9 @@ def midpointcircle(x, y, r, color):
             glVertex2f(-x, y)
     glEnd()
 '''
-# Mid point line drawing algo 
 
+
+# Mid point line drawing algo 
 def drawPoint(x, y):
     glPointSize(20)
     glBegin(GL_POINTS)
@@ -157,24 +157,16 @@ def convertFromZoneZeroToZoneSmth(x, y, zone):
     return zone_mappings[zone]
 
 
-
-
-
-
-
-
 #Midpoint Circle Drawing Algorithm
 def midpointcircle(x, y, r, color):
     glColor3f(*color)
     glPointSize(2)  # pixel size
     glBegin(GL_POINTS)
-
     d = 1.25 - r
     x1 = x
     y1 = y
     x = 0
     y = r
-
     while x <= y:
         if d < 0:
             d = d + 2 * x + 3
@@ -183,7 +175,6 @@ def midpointcircle(x, y, r, color):
             d = d + 2 * x - 2 * y + 5
             x += 1
             y -= 1
-
         # Draw horizontal lines (or points) between boundary points for all octants
         for fill_x in range(int(-x + x1), int(x + x1 + 1)):
             glVertex2f(fill_x, y + y1)
@@ -191,7 +182,6 @@ def midpointcircle(x, y, r, color):
         for fill_x in range(int(-y + x1), int(y + x1 + 1)):
             glVertex2f(fill_x, x + y1)
             glVertex2f(fill_x, -x + y1)
-
     glEnd()
 
 #We have used this because our midpoint algorithm seems slow for the UI
@@ -210,8 +200,6 @@ def draw_circle(x_center, y_center, radius, color):
     glEnd()
 
 
-#Midpoint Line Drawing Algorithm
-
 def draw_treeX(x,y):
     glColor3f(0.5, 0.3, 0.0)
     midPointAlgo(x+10,y+50,x+10,y-70)
@@ -223,7 +211,6 @@ def tree_leaf(x,y):
     # midpointcircle(x, y, 50, (1, 1, 1))
     # midpointcircle(x + 50, y, 40, (1, 1, 1))
     # midpointcircle(x - 50, y, 40, (1, 1, 1))
-    
     draw_circle(x, y, 60, (0,1,0))
     draw_circle(x + 50, y, 40, (0, 1, 0))
     draw_circle(x - 50, y, 30, (0, 1, 0))
@@ -236,13 +223,10 @@ def tree_leaf(x,y):
     draw_circle(x - 40, y-40, 30, (0, 1, 0))
     draw_circle(x + 30, y+40, 15, (0, 1, 0))
 
-
-
 rain_animation = False
 rain_timer = 0
 rain_duration = 120  # 5 seconds at 20 FPS
 raindrops = [(random.uniform(0, 800), random.uniform(0, 800)) for _ in range(2000)]
-
 
 def draw_raindrop(x, y):
     glColor3f(0.5, 0.5, 1.0)
@@ -272,27 +256,22 @@ def draw_sky():
         glColor3f(0.3, 0.3, 0.7)  # Rainy sky color (bottom)
     glVertex2f(800, 300)
     glVertex2f(0, 300)
-    
     glEnd()
 
-
-
-
+#Clouds
 def draw_cloud(x, y):
     if rain_animation:
         glColor3f(0.5, 0.5, 0.5)  # Dark grey clouds during rain
     else:
         glColor3f(1, 1, 1)  # White clouds (color will be overridden during rain)
-    
     # midpointcircle(x, y, 50, (1, 1, 1))
     # midpointcircle(x + 50, y, 40, (1, 1, 1))
     # midpointcircle(x - 50, y, 40, (1, 1, 1))
-    
     draw_circle(x, y, 50, (1, 1, 1))
     draw_circle(x + 50, y, 40, (1, 1, 1))
     draw_circle(x - 50, y, 40, (1, 1, 1))
     
-
+#Stars
 def draw_star(x, y):
     # Drawing a simple star using a point
     glColor3f(1, 1, 1)  # White color for stars
@@ -343,9 +322,6 @@ def draw_house(situation):
     glVertex2d(200, 250)
     glEnd()
 
-
-    
-    
     glColor3f(0.5, 0.0, 0.0)  # Black color for windows
     glBegin(GL_QUADS)
     glVertex2d(300, 250)
@@ -353,19 +329,16 @@ def draw_house(situation):
     glVertex2d(250, 340)
     glVertex2d(250, 300)
     glVertex2d(300, 250)
-
     glEnd()
 
     
     glColor3f(0.5, 0.0, 0.0)  # Black color for windows
-   
     glBegin(GL_POLYGON)
     glVertex2d(310, 270)
     glVertex2d(350, 270)
     glVertex2d(370, 250)
     glVertex2d(300, 250)
     glVertex2d(310, 270)
-
     glEnd()
 
 
@@ -576,7 +549,6 @@ def draw_flower(x, y):
         petal_x = x + petal_radius * cos(angle * 3.14 / 180)
         petal_y = y + petal_radius * sin(angle * 3.14 / 180)
         draw_circle(petal_x, petal_y, petal_radius, petal_color)
-
     # Draw center of the flower using a circle
     center_radius = 5
     center_color = (1.0, 1.0, 0.0) # Yellow color
@@ -606,38 +578,27 @@ def iterate():
     
 def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
     glLoadIdentity()
     iterate()
     global is_day, rain_animation, rain_timer, boat_position
-
      # Draw sky and ground
     draw_sky()
     draw_ground()
-    
     # Draw houses
     draw_house("day")
     global bird_animation
-    
-
     draw_river()
     #draw_boat(boat_position)
     draw_treeX(70,250)
     draw_treeX(420,280)
-     
     draw_garden()
-        
     draw_fruit(50, 270, color=(1.0, 0.0, 0.0))
     draw_fruit(60, 280, color=(1.0, 0.0, 0.0))
     draw_fruit(70, 260, color=(1.0, 0.0, 0.0))
-
-
     draw_fruit(420, 300, color=(1.0, 0.0, 0.0))
     draw_fruit(430, 320, color=(1.0, 0.0, 0.0))
     draw_fruit(435, 310, color=(1.0, 0.0, 0.0))
-    
     global rain_timer, rain_animation
-
     # Rain Scene
     if rain_animation:
         #glColor3f(0.9, 0.9, 0.9)  # Grey clouds during rain
@@ -656,8 +617,6 @@ def showScreen():
             rain_animation = False
             rain_timer = 0
             raindrops = [(random.uniform(0, 800), random.uniform(0, 800)) for _ in range(2000)]
-
-
     # Day Scene
     elif is_day:
         #draw_circle(700, 500, 40, (1.0, 0.843, 0.0))  # Sun
@@ -675,17 +634,12 @@ def showScreen():
             draw_star(x, y)
         draw_house("night")
         draw_boat(boat_position, is_day)
-
-
+    # Birds Animations
     if bird_animation:
         global bird_positions
         bird_positions = [(x - 2, y) for x, y in bird_positions]  # Move birds to the left
         for x, y in bird_positions:
             draw_bird(x, y)
-    
-    
-   
-
     glutSwapBuffers()
 
 def keyboard(key, x, y):
@@ -706,6 +660,8 @@ def keyboard(key, x, y):
         else:
             boat_position -= 5
     glutPostRedisplay()
+
+
 
 glutInit()
 glutInitDisplayMode(GLUT_RGBA)
