@@ -98,9 +98,12 @@ def midpointcircle(x, y, r, color):
 
     glEnd()
 
-
+#We have used this because our midpoint algorithm seems slow for the UI
 def draw_circle(x_center, y_center, radius, color):
-    glColor3f(*color) # Set the color
+    if len(color) == 3:
+        glColor3f(*color) # Set the color
+    elif len(color) ==4:
+        glColor4f(*color)
     glBegin(GL_POLYGON)
     num_segments = 100 # Number of segments for smooth circle
     for i in range(num_segments):
@@ -109,6 +112,13 @@ def draw_circle(x_center, y_center, radius, color):
         dy = radius * sin(theta)
         glVertex2f(dx + x_center, dy + y_center)
     glEnd()
+
+
+#Midpoint Line Drawing Algorithm
+
+
+
+
 
 
 rain_animation = False
@@ -360,7 +370,54 @@ def draw_river():
     glVertex2f(500, 300)
     glEnd()
 
-def draw_boat(x_position):
+# Reflection Transformation Function to draw the reflection of the boat
+def draw_boat_reflection(x_position, is_day):
+    if not is_day:
+        return  # Only draw reflection during the day
+
+    # Reflection transformation (mirror across the y-axis at the river level)
+    reflection_y = 200  # Level of the river where the reflection occurs
+
+    # Drawing the base reflection with reduced opacity and slight color modification
+    #glColor4f(0.6, 0.3, 0.1, 0.2)  # Slightly lighter and transparent color
+    glColor4f(0.6, 0.3, 0.1, 0.1)
+    glBegin(GL_POLYGON)
+    glVertex2f(x_position, 2 * reflection_y - 270)
+    glVertex2f(x_position + 45, 2 * reflection_y - 220)
+    glVertex2f(x_position + 110, 2 * reflection_y - 220)
+    glVertex2f(x_position + 150, 2 * reflection_y - 270)
+    glVertex2f(x_position, 2 * reflection_y - 270)
+    glEnd()
+
+    # Drawing the upper part reflection with reduced opacity and slight color modification
+    #glColor4f(0.2, 0.8, 0.2, 0.3)  # Slightly lighter and transparent color
+    #glColor4f(0.3, 0.75, 0.7, 0.2)
+    glColor4f(0.3, 0.75, 0.7, 0.1)
+    glBegin(GL_POLYGON)
+    glVertex2f(x_position + 75, 2 * reflection_y - 290)
+    glVertex2f(x_position + 75, 2 * reflection_y - 330)
+    glVertex2f(x_position + 150, 2 * reflection_y - 330)
+    glVertex2f(x_position + 150, 2 * reflection_y - 290)
+    glVertex2f(x_position + 75, 2 * reflection_y - 290)
+    glEnd()
+
+    # Additional reflection details
+    #glColor4f(0.2, 0.2, 0.8, 0.3)  # Slightly lighter and transparent color
+    #glColor4f(0.3, 0.6, 0.9, 0.2)
+    glColor4f(0.3, 0.6, 0.9, 0.1)
+    glBegin(GL_QUADS)
+    glVertex2f(x_position + 75, 2 * reflection_y - 270)
+    glVertex2f(x_position + 75, 2 * reflection_y - 330)
+    glVertex2f(x_position + 72, 2 * reflection_y - 330)
+    glVertex2f(x_position + 72, 2 * reflection_y - 270)
+    glEnd()
+
+    draw_circle(x_position+113, 307-reflection_y-15, 13, (1.0, 0.3, 0.3, 0.1))
+
+
+
+
+def draw_boat(x_position, is_day):
     # Draw the base of the boat
     glColor3f(0.5, 0.25, 0.0)  # Brown color
     glBegin(GL_POLYGON)
@@ -398,6 +455,8 @@ def draw_boat(x_position):
     
     draw_circle(x_position+113, 307, 13, (1, 0, 0))
 
+    draw_boat_reflection(x_position, is_day)
+
 boat_position = 550
 
 def iterate():
@@ -428,7 +487,7 @@ def showScreen():
     draw_tree(-0.9, -0.1)
     draw_tree(-0.8, -0.2)
     draw_river()
-    draw_boat(boat_position)
+    #draw_boat(boat_position)
     
         
         
@@ -442,6 +501,7 @@ def showScreen():
         draw_cloud(300, 420)
         draw_cloud(200, 500)
         draw_house("night")
+        draw_boat(boat_position, is_day=False)
         # Raindrop animation
         global raindrops
         raindrops = [(x, y - 2) for x, y in raindrops]  # Move raindrops downward
@@ -462,6 +522,7 @@ def showScreen():
         draw_cloud(300, 420)
         draw_cloud(200, 500)
         draw_house("day")
+        draw_boat(boat_position, is_day)
     # Night Scene
     else:
         #draw_circle(700, 500, 40, (1, 1, 1))  # Moon
@@ -469,6 +530,7 @@ def showScreen():
         for x, y in star_positions:
             draw_star(x, y)
         draw_house("night")
+        draw_boat(boat_position, is_day)
 
 
     if bird_animation:
@@ -477,7 +539,7 @@ def showScreen():
         for x, y in bird_positions:
             draw_bird(x, y)
 
-    draw_boat(boat_position)
+    
 
     glutSwapBuffers()
 
