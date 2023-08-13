@@ -66,6 +66,102 @@ def midpointcircle(x, y, r, color):
             glVertex2f(-x, y)
     glEnd()
 '''
+# Mid point line drawing algo 
+
+def drawPoint(x, y):
+    glPointSize(20)
+    glBegin(GL_POINTS)
+    glVertex2f(x, y)
+    glEnd()
+    
+    
+def findZone(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    if dx >= 0 and dy >= 0:
+        if abs(dx) > abs(dy):
+            return 0
+        else:
+            return 1
+    elif dx <= 0 and dy >= 0:
+        if abs(dx) > abs(dy):
+            return 3
+        else:
+            return 2
+    elif dx <= 0 and dy <= 0:
+        if abs(dx) > abs(dy):
+            return 4
+        else:
+            return 5
+    else:  # dx >= 0 and dy <= 0
+        if abs(dx) > abs(dy):
+            return 7
+        else:
+            return 6
+
+
+def midPointAlgo(x1, y1, x2, y2):
+    zone = findZone(x1, y1, x2, y2)
+    x1, y1, x2, y2 = convertToZoneZero(x1, y1, x2, y2, zone)
+    dx = x2 - x1
+    dy = y2 - y1
+    d = 2 * dy - dx
+    incE = 2 * dy
+    incNE = 2 * (dy - dx)
+
+    x = x1
+    y = y1
+
+    while x <= x2:
+        tx, ty = convertFromZoneZeroToZoneSmth(x, y, zone)
+        drawPoint(tx, ty)  # Assuming that you have a drawPoint function for drawing the point
+        # print("Drawn", (tx, ty))  # You can use this line for debugging if needed
+        x += 1
+        if d > 0:
+            d += incNE
+            y += 1
+        else:
+            d += incE
+
+
+
+def convertToZoneZero(x1, y1, x2, y2, zone):
+    zone_mappings = {
+        0: (x1, y1, x2, y2),
+        1: (y1, x1, y2, x2),
+        2: (y1, -x1, y2, -x2),
+        3: (-x1, y1, -x2, y2),
+        4: (-x1, -y1, -x2, -y2),
+        5: (-y1, -x1, -y2, -x2),
+        6: (-y1, x1, -y2, x2),
+        7: (x1, -y1, x2, -y2),
+    }
+
+    return zone_mappings[zone]
+
+
+
+def convertFromZoneZeroToZoneSmth(x, y, zone):
+    zone_mappings = {
+        0: (x, y),
+        1: (y, x),
+        2: (-y, x),
+        3: (-x, y),
+        4: (-x, -y),
+        5: (-y, -x),
+        6: (y, -x),
+        7: (x, -y),
+    }
+
+    return zone_mappings[zone]
+
+
+
+
+
+
+
 
 
 def midpointcircle(x, y, r, color):
@@ -116,8 +212,29 @@ def draw_circle(x_center, y_center, radius, color):
 
 #Midpoint Line Drawing Algorithm
 
+def draw_treeX(x,y):
+    glColor3f(0.5, 0.3, 0.0)
+    midPointAlgo(x+10,y+50,x+10,y-70)
+    midPointAlgo(x-10,y+50,x-10,y-70)
+    midPointAlgo(x+10,y-70,x-10,y-70)
+    tree_leaf(x,y+50)
 
-
+def tree_leaf(x,y):
+    # midpointcircle(x, y, 50, (1, 1, 1))
+    # midpointcircle(x + 50, y, 40, (1, 1, 1))
+    # midpointcircle(x - 50, y, 40, (1, 1, 1))
+    
+    draw_circle(x, y, 60, (0,1,0))
+    draw_circle(x + 50, y, 40, (0, 1, 0))
+    draw_circle(x - 50, y, 30, (0, 1, 0))
+    draw_circle(x + 50, y-50, 20, (0, 1, 0))
+    draw_circle(x - 50, y+20, 30, (0, 1, 0))
+    draw_circle(x + 50, y+10, 30, (0, 1, 0))
+    draw_circle(x - 50, y+20, 30, (0, 1, 0))
+    draw_circle(x + 50, y+10, 30, (0, 1, 0))
+    draw_circle(x - 50, y, 30, (0, 1, 0))
+    draw_circle(x - 40, y-40, 30, (0, 1, 0))
+    draw_circle(x + 30, y+40, 15, (0, 1, 0))
 
 
 
@@ -380,7 +497,7 @@ def draw_boat_reflection(x_position, is_day):
 
     # Drawing the base reflection with reduced opacity and slight color modification
     #glColor4f(0.6, 0.3, 0.1, 0.2)  # Slightly lighter and transparent color
-    glColor4f(0.6, 0.3, 0.1, 0.1)
+    glColor4f(0.6, 0.3, 0.1, 0.05)
     glBegin(GL_POLYGON)
     glVertex2f(x_position, 2 * reflection_y - 270)
     glVertex2f(x_position + 45, 2 * reflection_y - 220)
@@ -404,7 +521,7 @@ def draw_boat_reflection(x_position, is_day):
     # Additional reflection details
     #glColor4f(0.2, 0.2, 0.8, 0.3)  # Slightly lighter and transparent color
     #glColor4f(0.3, 0.6, 0.9, 0.2)
-    glColor4f(0.3, 0.6, 0.9, 0.1)
+    glColor4f(0.3, 0.6, 0.9, 0.05)
     glBegin(GL_QUADS)
     glVertex2f(x_position + 75, 2 * reflection_y - 270)
     glVertex2f(x_position + 75, 2 * reflection_y - 330)
@@ -412,7 +529,7 @@ def draw_boat_reflection(x_position, is_day):
     glVertex2f(x_position + 72, 2 * reflection_y - 270)
     glEnd()
 
-    draw_circle(x_position+113, 307-reflection_y-15, 13, (1.0, 0.3, 0.3, 0.1))
+    draw_circle(x_position+113, 307-reflection_y-15, 13, (1.0, 0.3, 0.3, 0.05))
 
 
 
@@ -479,17 +596,17 @@ def showScreen():
      # Draw sky and ground
     draw_sky()
     draw_ground()
-
+    
     # Draw houses
     draw_house("day")
     global bird_animation
-    # Draw trees
+    
     draw_tree(-0.9, -0.1)
     draw_tree(-0.8, -0.2)
     draw_river()
     #draw_boat(boat_position)
-    
-        
+    draw_treeX(70,250)
+     
         
   
     global rain_timer, rain_animation
@@ -538,8 +655,9 @@ def showScreen():
         bird_positions = [(x - 0.5, y) for x, y in bird_positions]  # Move birds to the left
         for x, y in bird_positions:
             draw_bird(x, y)
-
     
+    
+   
 
     glutSwapBuffers()
 
