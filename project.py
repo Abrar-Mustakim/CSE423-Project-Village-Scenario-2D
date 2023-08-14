@@ -279,7 +279,9 @@ def draw_sky():
 
 
 # Clouds
+flower_rotation_angle = 0.0
 def draw_cloud(x, y):
+
     if rain_animation:
         glColor3f(0.5, 0.5, 0.5)  # Dark grey clouds during rain
     else:
@@ -287,10 +289,12 @@ def draw_cloud(x, y):
     # midpointcircle(x, y, 50, (1, 1, 1))
     # midpointcircle(x + 50, y, 40, (1, 1, 1))
     # midpointcircle(x - 50, y, 40, (1, 1, 1))
+    glPushMatrix()
+    glRotatef(flower_rotation_angle, 0, 0, 1)
     draw_circle(x, y, 50, (1, 1, 1))
     draw_circle(x + 50, y, 40, (1, 1, 1))
     draw_circle(x - 50, y, 40, (1, 1, 1))
-
+    glPopMatrix()
 
 # Stars
 def draw_star(x, y):
@@ -666,7 +670,7 @@ def showScreen():
 
 
 def keyboard(key, x, y):
-    global is_day, bird_animation, sun_scale
+    global is_day, bird_animation, sun_scale, flower_rotation_angle
     global is_day, rain_animation, rain_timer, boat_position
     if key == b'd':
         is_day = not is_day
@@ -686,6 +690,13 @@ def keyboard(key, x, y):
     if key == b's' or key == b'S':
         # Toggle scaling factor between 1.0 and 1.5 when the "S" key is pressed
         sun_scale = 1.5 if sun_scale == 1.0 else 1.0
+
+    elif key == b'e' or key == b'E':
+        # Rotate right
+        flower_rotation_angle += 5.0
+    #elif key == b'q' or key == b'Q':
+        # Rotate left
+        #flower_rotation_angle -= 5.0
     glutPostRedisplay()
 
 
