@@ -523,7 +523,7 @@ def draw_boat(x_position, is_day):
     glVertex2f(x_position+75, 290)
     glEnd()
 
-    glColor3f(0.0, 0.0, 0.9)  # Green color for the ground
+    glColor3f(0.0, 0.0, 0.9)  # Blue stick of the flag
     glBegin(GL_QUADS)
     glVertex2f(x_position+ 75, 270)
     glVertex2f(x_position+ 75, 330)
