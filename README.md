@@ -20,16 +20,18 @@ In this project, we have developed a village scenario using OpenGL. The scene in
 - Pressing 'R': Rain is simulated, creating a rainy scenario with appropriate visual effects.
 - Pressing 'M': Boat will move to left
 - Pressing 'N': Boat will move to right
+- Pressing 'E': Cloud will move/rotate
+- Pressing 'S': Flowers will Bloom
 
 The project aims to showcase our understanding of computer graphics concepts and our ability to create interactive scenes using OpenGL. It demonstrates our teamwork and skills in designing visually appealing scenarios.
 
 ## How to Run
 
 1. Clone this repository to your local machine.
-2. Make sure you have OpenGL installed.
+2. Install PyOpenGL from this repo using `pip install PyOpenGL_accelerate-3.1.6-cp311-cp311-win_amd64.whl` and `pip install PyOpenGL-3.1.6-cp311-cp311-win_amd64.whl`
 3. Compile the project using Python.
 4. Run the executable.
-5. Interact with the scene using keyboard input ('D', 'R', 'B', 'M', 'N') to experience different scenarios.
+5. Interact with the scene using keyboard input ('D', 'R', 'B', 'M', 'N', 'S', 'E') to experience different scenarios.
 
 ## Project Structure
 
